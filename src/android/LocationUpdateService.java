@@ -681,7 +681,7 @@ public class LocationUpdateService extends Service implements LocationListener {
             //request.setHeader("Content-type", "application/json");
 
             // Request parameters and other properties.
-            HttpParams basic_params = new BasicHttpParams();
+            BasicHttpParams basic_params = new BasicHttpParams();
             basic_params.setParameter( "current_location_lat", l.getLatitude());
             basic_params.setParameter( "current_location_lng", l.getLongitude());
             basic_params.setParameter( "accuracy", l.getAccuracy());
