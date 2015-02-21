@@ -686,7 +686,7 @@ public class LocationUpdateService extends Service implements LocationListener {
             basic_params.setParameter( "current_location_lng", l.getLongitude());
             basic_params.setParameter( "accuracy", l.getAccuracy());
             basic_params.setParameter( "speed", l.getSpeed());
-            basic_params.setParameter( "bearing", l.getBearing()));
+            basic_params.setParameter( "bearing", l.getBearing());
             basic_params.setParameter( "altitude", l.getAltitude());
             basic_params.setParameter( "recorded_at", dao.dateToString(l.getRecordedAt()));
 
