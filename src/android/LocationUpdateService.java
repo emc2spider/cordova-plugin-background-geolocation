@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.params.BasicHttpParams;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
@@ -674,10 +675,22 @@ public class LocationUpdateService extends Service implements LocationListener {
 
             Log.i(TAG, "location: " + location.toString());
 
-            StringEntity se = new StringEntity(params.toString());
-            request.setEntity(se);
-            request.setHeader("Accept", "application/json");
-            request.setHeader("Content-type", "application/json");
+            //StringEntity se = new StringEntity(params.toString());
+            //request.setEntity(se);
+            //request.setHeader("Accept", "application/json");
+            //request.setHeader("Content-type", "application/json");
+
+            // Request parameters and other properties.
+            HttpParams basic_params = new BasicHttpParams();
+            basic_params.setParameter( "latitude", l.getLatitude());
+            basic_params.setParameter( "longitude", l.getLongitude());
+            basic_params.setParameter( "accuracy", l.getAccuracy());
+            basic_params.setParameter( "speed", l.getSpeed());
+            basic_params.setParameter( "bearing", l.getBearing()))
+            basic_params.setParameter( "altitude", l.getAltitude());
+            basic_params.setParameter( "recorded_at", dao.dateToString(l.getRecordedAt()));
+            request.addHeader("Content-Type", "application/x-www-form-urlencoded");
+            request.setParams(basic_params);
 
             Iterator<String> headkeys = headers.keys();
             while( headkeys.hasNext() ){
