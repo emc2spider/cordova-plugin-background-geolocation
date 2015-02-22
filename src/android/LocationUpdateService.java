@@ -704,8 +704,8 @@ public class LocationUpdateService extends Service implements LocationListener {
             Log.i(TAG, "location: " + se.toString());
 
             request.setEntity(se);
-            String p_length = String.valueOf(se.getContentLength());
-            request.setHeader("Content-length", p_length);
+//            String p_length = String.valueOf(se.getContentLength());
+//            request.setHeader("Content-length", p_length);
 
             request.setHeader("Content-type", "application/x-www-form-urlencoded");
 
