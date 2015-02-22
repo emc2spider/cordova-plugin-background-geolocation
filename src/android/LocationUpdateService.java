@@ -1,11 +1,13 @@
 package com.tenforwardconsulting.cordova.bgloc;
 
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.params.BasicHttpParams;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
@@ -681,33 +683,31 @@ public class LocationUpdateService extends Service implements LocationListener {
             //request.setHeader("Content-type", "application/json");
 
             // Request parameters and other properties.
-            BasicHttpParams basic_params = new BasicHttpParams();
-            basic_params = (BasicHttpParams) basic_params.setParameter( "current_location_lat", l
-                    .getLatitude());
-            basic_params = (BasicHttpParams) basic_params.setParameter( "current_location_lng", l
-                    .getLongitude());
-            basic_params = (BasicHttpParams) basic_params.setParameter( "accuracy", l.getAccuracy
-                    ());
-            basic_params = (BasicHttpParams) basic_params.setParameter( "speed", l.getSpeed());
-            basic_params = (BasicHttpParams) basic_params.setParameter( "bearing", l.getBearing());
-            basic_params = (BasicHttpParams) basic_params.setParameter( "altitude", l.getAltitude
-                    ());
-            basic_params = (BasicHttpParams) basic_params.setParameter( "recorded_at", dao
-                    .dateToString(l.getRecordedAt()));
+            List<BasicNameValuePair> basic_params = new ArrayList<BasicNameValuePair>();
+            basic_params.add(new BasicNameValuePair("current_location_lat", l.getLatitude()));
+            basic_params.add(new BasicNameValuePair("current_location_lng", l.getLongitude()));
+            basic_params.add(new BasicNameValuePair("accuracy", l.getAccuracy()));
+            basic_params.add(new BasicNameValuePair("speed", l.getSpeed()));
+            basic_params.add(new BasicNameValuePair("bearing", l.getBearing()));
+            basic_params.add(new BasicNameValuePair("altitude", l.getAltitude()));
+            basic_params.add(new BasicNameValuePair("recorded_at", dao.dateToString(l.getRecordedAt())));
 
             Iterator<String> param_keys = params.keys();
             while (param_keys.hasNext()) {
                 String p_key = param_keys.next();
                 if (p_key != null) {
-                    basic_params = (BasicHttpParams) basic_params.setParameter(p_key, (String)
-                            params.getString(p_key));
+                    basic_params.add(new BasicNameValuePair(p_key, (String) params.getString(p_key)));
                 }
             }
 
-            Log.i(TAG, "location: " + basic_params.toString());
+            StringEntity se = new UrlEncodedFormEntity(basic_params,"UTF-8");
+            Log.i(TAG, "location: " + se.toString());
 
-            request.addHeader("Content-type", "application/x-www-form-urlencoded");
-            request.setParams(basic_params);
+            request.setEntity(se);
+            String p_length = String.valueOf(se.getContentLength());
+            request.setHeader("Content-length", p_length);
+
+            request.setHeader("Content-type", "application/x-www-form-urlencoded");
 
             Iterator<String> headkeys = headers.keys();
             while( headkeys.hasNext() ){
