@@ -706,7 +706,7 @@ public class LocationUpdateService extends Service implements LocationListener {
 
             Log.i(TAG, "location: " + basic_params.toString());
 
-            request.addHeader("Content-Type", "application/x-www-form-urlencoded");
+            request.addHeader("Content-type", "application/x-www-form-urlencoded");
             request.setParams(basic_params);
 
             Iterator<String> headkeys = headers.keys();
