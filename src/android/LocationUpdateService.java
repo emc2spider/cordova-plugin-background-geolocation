@@ -673,7 +673,7 @@ public class LocationUpdateService extends Service implements LocationListener {
             location.put("recorded_at", dao.dateToString(l.getRecordedAt()));
             params.put("location", location);
 
-            Log.i(TAG, "location: " + location.toString());
+//            Log.i(TAG, "location: " + location.toString());
 
             //StringEntity se = new StringEntity(params.toString());
             //request.setEntity(se);
@@ -682,21 +682,23 @@ public class LocationUpdateService extends Service implements LocationListener {
 
             // Request parameters and other properties.
             BasicHttpParams basic_params = new BasicHttpParams();
-            basic_params.setParameter( "current_location_lat", l.getLatitude());
-            basic_params.setParameter( "current_location_lng", l.getLongitude());
-            basic_params.setParameter( "accuracy", l.getAccuracy());
-            basic_params.setParameter( "speed", l.getSpeed());
-            basic_params.setParameter( "bearing", l.getBearing());
-            basic_params.setParameter( "altitude", l.getAltitude());
-            basic_params.setParameter( "recorded_at", dao.dateToString(l.getRecordedAt()));
+            basic_params = basic_params.setParameter( "current_location_lat", l.getLatitude());
+            basic_params = basic_params.setParameter( "current_location_lng", l.getLongitude());
+            basic_params = basic_params.setParameter( "accuracy", l.getAccuracy());
+            basic_params = basic_params.setParameter( "speed", l.getSpeed());
+            basic_params = basic_params.setParameter( "bearing", l.getBearing());
+            basic_params = basic_params.setParameter( "altitude", l.getAltitude());
+            basic_params = basic_params.setParameter( "recorded_at", dao.dateToString(l.getRecordedAt()));
 
             Iterator<String> param_keys = params.keys();
             while (param_keys.hasNext()) {
                 String p_key = param_keys.next();
                 if (p_key != null) {
-                    basic_params.setParameter(p_key, (String)params.getString(p_key));
+                    basic_params = basic_params.setParameter(p_key, (String)params.getString(p_key));
                 }
             }
+
+            Log.i(TAG, "location: " + basic_params.toString());
 
             request.addHeader("Content-Type", "application/x-www-form-urlencoded");
             request.setParams(basic_params);
