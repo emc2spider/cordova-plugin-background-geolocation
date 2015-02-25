@@ -1,5 +1,8 @@
 package com.tenforwardconsulting.cordova.bgloc.data;
 
+import java.lang.Exception;
+import java.math.BigDecimal;
+import java.lang.Double;
 import java.util.Date;
 
 import android.os.SystemClock;
@@ -68,8 +71,8 @@ public class Location {
 	public static Location fromAndroidLocation(android.location.Location originalLocation) {
 		Location location = new Location();
 		location.setRecordedAt(new Date(originalLocation.getTime()));
-		location.setLongitude(String.valueOf(originalLocation.getLongitude()));
-		location.setLatitude(String.valueOf(originalLocation.getLatitude()));
+		location.setLongitude(String.valueOf(setScale(originalLocation.getLongitude())));
+		location.setLatitude(String.valueOf(setScale(originalLocation.getLatitude())));
 		location.setAccuracy(String.valueOf(originalLocation.getAccuracy()));
 		location.setSpeed(String.valueOf(originalLocation.getSpeed()));
 		location.setBearing(String.valueOf(originalLocation.getBearing()));
@@ -77,4 +80,15 @@ public class Location {
 		
 		return location;
 	}
+
+    private static Double setScale (Double value) {
+        Double rounded = value;
+        try {
+            BigDecimal fixedScale = new BigDecimal(value).setScale(14, BigDecimal.ROUND_HALF_EVEN);
+            rounded = fixedScale.doubleValue();
+        } catch (Exception e) {
+            // There was a problem setting the scale!
+        }
+        return rounded;
+    }
 }
