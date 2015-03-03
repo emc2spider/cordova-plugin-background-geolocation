@@ -51,10 +51,10 @@
         </config-file> 
      </platform>          
 
-     <platform name="ios">
+     <!--<platform name="ios"> -->
         <!-- required background modes:  App registers for location updates -->
         
-        <config-file target="*-Info.plist" parent="NSLocationAlwaysUsageDescription">
+        <!-- <config-file target="*-Info.plist" parent="NSLocationAlwaysUsageDescription">
             <string>This app requires background location tracking</string>
         </config-file>
 
@@ -73,10 +73,10 @@
         <framework src="AVFoundation.framework" weak="true" />
         <source-file src="src/ios/CDVBackgroundGeoLocation.m" />
         <header-file src="src/ios/CDVBackgroundGeoLocation.h" />
-     </platform>          
+     </platform> -->
 
 	<!-- wp8 -->
-	<platform name="wp8">
+	<!-- <platform name="wp8">
 		<config-file target="config.xml" parent="/*">
 			<feature name="BackgroundGeoLocation">
 				<param name="wp-package" value="BackgroundGeoLocation" onload="true" />
@@ -98,6 +98,6 @@
 		<source-file src="src/wp8/DebugAudioNotifier.cs" />
 		<source-file src="src/wp8/ExtensionMethods.cs" />
 		<source-file src="src/wp8/IBackgroundGeoLocation.cs" /> 
-	</platform>
+	</platform> -->
 
 </plugin>
