@@ -700,9 +700,9 @@ public class LocationUpdateService extends Service implements LocationListener {
                 }
             }
 
-            StringEntity se = new UrlEncodedFormEntity(basic_params,"UTF-8");
-            Log.i(TAG, "location: " + se.toString());
+            Log.i(TAG, "location: " + l.getLatitude() + "," + l.getLongitude());
 
+            StringEntity se = new UrlEncodedFormEntity(basic_params,"UTF-8");
             request.setEntity(se);
 //            String p_length = String.valueOf(se.getContentLength());
 //            request.setHeader("Content-length", p_length);
@@ -794,11 +794,29 @@ public class LocationUpdateService extends Service implements LocationListener {
         protected Boolean doInBackground(Object...objects) {
             Log.d(TAG, "Executing PostLocationTask#doInBackground");
             LocationDAO locationDAO = DAOFactory.createLocationDAO(LocationUpdateService.this.getApplicationContext());
-            for (com.tenforwardconsulting.cordova.bgloc.data.Location savedLocation : locationDAO.getAllLocations()) {
-                Log.d(TAG, "Posting saved location");
-                if (postLocation(savedLocation, locationDAO)) {
-                    locationDAO.deleteLocation(savedLocation);
+            Location[] location_buffer = locationDAO.getAllLocations();
+            //Only send the last known location
+            if (location_buffer.length <= 1) {
+                com.tenforwardconsulting.cordova.bgloc.data.Location toSend;
+                // Get first and last location recorded dates
+                Date date0 = location_buffer[0].getRecordedAt();
+                Date dateN = location_buffer[location_buffer.length-1].getRecordedAt();
+                // Choose the most recent one
+                if (dateN.after(date0)) {
+                    toSend = location_buffer[location_buffer.length-1];
+                } else {
+                    toSend = location_buffer[0];
                 }
+                // Send it to the server
+                Log.d(TAG, "Posting last saved location");
+                if (postLocation(toSend, locationDAO)) {
+                    Log.d(TAG, "Location posted successfully");
+                }
+            }
+            // Discard the queue afterwards
+            for (com.tenforwardconsulting.cordova.bgloc.data.Location savedLocation : location_buffer) {
+                Log.d(TAG, "Discard old location");
+                locationDAO.deleteLocation(savedLocation);
             }
             return true;
         }
