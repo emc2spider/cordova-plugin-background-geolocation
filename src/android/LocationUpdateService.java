@@ -3,6 +3,7 @@ package com.tenforwardconsulting.cordova.bgloc;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Date;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -794,7 +795,7 @@ public class LocationUpdateService extends Service implements LocationListener {
         protected Boolean doInBackground(Object...objects) {
             Log.d(TAG, "Executing PostLocationTask#doInBackground");
             LocationDAO locationDAO = DAOFactory.createLocationDAO(LocationUpdateService.this.getApplicationContext());
-            Location[] location_buffer = locationDAO.getAllLocations();
+            com.tenforwardconsulting.cordova.bgloc.data.Location[] location_buffer = locationDAO.getAllLocations();
             //Only send the last known location
             if (location_buffer.length <= 1) {
                 com.tenforwardconsulting.cordova.bgloc.data.Location toSend;
