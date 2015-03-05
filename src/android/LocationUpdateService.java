@@ -796,28 +796,23 @@ public class LocationUpdateService extends Service implements LocationListener {
             Log.d(TAG, "Executing PostLocationTask#doInBackground");
             LocationDAO locationDAO = DAOFactory.createLocationDAO(LocationUpdateService.this.getApplicationContext());
             com.tenforwardconsulting.cordova.bgloc.data.Location[] location_buffer = locationDAO.getAllLocations();
-            //Only send the last known location
-            if (location_buffer.length <= 1) {
-                com.tenforwardconsulting.cordova.bgloc.data.Location toSend;
-                // Get first and last location recorded dates
-                Date date0 = location_buffer[0].getRecordedAt();
-                Date dateN = location_buffer[location_buffer.length-1].getRecordedAt();
-                // Choose the most recent one
-                if (dateN.after(date0)) {
-                    toSend = location_buffer[location_buffer.length-1];
-                } else {
-                    toSend = location_buffer[0];
-                }
-                // Send it to the server
-                Log.d(TAG, "Posting last saved location");
-                if (postLocation(toSend, locationDAO)) {
-                    Log.d(TAG, "Location posted successfully");
-                }
-            }
-            // Discard the queue afterwards
+            // Holder for the most recent location
+            com.tenforwardconsulting.cordova.bgloc.data.Location toSend = null;
+            // Review the list of buffered locations
             for (com.tenforwardconsulting.cordova.bgloc.data.Location savedLocation : location_buffer) {
+                // Check if this location was recorded after the most recent location known
+                Date savedDate = savedLocation.getRecordedAt();
+                if (toSend == null || savedDate.after(toSend.getRecordedAt())) {
+                    toSend = savedLocation;
+                }
+                // Remove this location from the persistent layer
                 Log.d(TAG, "Discard old location");
                 locationDAO.deleteLocation(savedLocation);
+            }
+            // Send the most recent location known to the server
+            Log.d(TAG, "Posting last saved location");
+            if (postLocation(toSend, locationDAO)) {
+                Log.d(TAG, "Location posted successfully");
             }
             return true;
         }
