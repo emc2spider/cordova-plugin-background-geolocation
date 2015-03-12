@@ -84,7 +84,7 @@ public class Location {
     private static Double setScale (Double value) {
         Double rounded = value;
         try {
-            BigDecimal fixedScale = new BigDecimal(value).setScale(14, BigDecimal.ROUND_HALF_EVEN);
+            BigDecimal fixedScale = new BigDecimal(value).setScale(7, BigDecimal.ROUND_HALF_EVEN);
             rounded = fixedScale.doubleValue();
         } catch (Exception e) {
             // There was a problem setting the scale!
